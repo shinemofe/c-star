@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore, Mutation } from '@/store/index'
-
 const store = useStore()
 const count = computed(() => store.state.count)
 const props = defineProps<{

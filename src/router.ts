@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
 import Index from '@/pages/Index.vue'
 import About from '@/pages/About.vue'
+import ProjectSelect from '@/pages/Project/Index.vue'
 
 const routes = [
   {
@@ -14,6 +14,13 @@ const routes = [
   {
     path: '/about/',
     component: About,
+    meta: {
+      title: 'About',
+    },
+  },
+  {
+    path: '/project/select',
+    component: ProjectSelect,
     meta: {
       title: 'About',
     },

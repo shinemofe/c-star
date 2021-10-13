@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+// @ts-ignore
 import pkg from './package.json'
 
 process.env.VITE_APP_VERSION = pkg.version
