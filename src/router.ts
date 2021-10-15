@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Index from '@/pages/Index.vue'
-import About from '@/pages/About.vue'
-import ProjectSelect from '@/pages/Project/Index.vue'
+import Index from '@/views/Index.vue'
+import About from '@/views/About.vue'
+import ProjectSelect from '@/views/project/Index.vue'
+import DragDemo from './views/drag-demo.vue'
 
 const routes = [
   {
@@ -25,6 +26,10 @@ const routes = [
       title: 'About',
     },
   },
+  {
+    path: '/drag-demo',
+    component: DragDemo
+  }
 ]
 
 const router = createRouter({
