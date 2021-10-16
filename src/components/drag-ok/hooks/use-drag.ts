@@ -1,5 +1,6 @@
 import { reactive, toRefs } from 'vue'
 import { State, DropOptions, DragOptions, DropData } from '../types'
+import { addEvent } from './doc-event'
 
 const dragWrapperMap = new WeakMap<Node, DragOptions>()
 const dropTargetMap = new WeakMap<Node, DropOptions>()
@@ -17,6 +18,20 @@ const state = reactive<State>({
   current: undefined
 })
 
+function setItemPosition (x: number, y: number, itemId?: string): { x: number, y: number } {
+  let item
+  const rect = state.dropContainerEl!.getBoundingClientRect()
+  if (itemId) {
+    item = state.dropResult.find(x => x.id === Number(itemId))!
+    item.x = x - rect.x
+    item.y = y - rect.y
+  }
+  return {
+    x: x - rect.x,
+    y: y - rect.y
+  }
+}
+
 function handleMouseDown (e: MouseEvent, itemEl: HTMLDivElement) {
   state.startX = e.pageX
   state.startY = e.pageY
@@ -33,10 +48,11 @@ function handleMouseMove (e: MouseEvent) {
     state.moveY = e.pageY - state.startOffsetY
     const dataset = state.draggingEl!.dataset
     if (dataset.id) {
-      const item = state.dropResult.find(x => x.id === Number(dataset.id))!
-      const rect = state.dropContainerEl!.getBoundingClientRect()
-      item.x = state.moveX - rect.x
-      item.y = state.moveY - rect.y
+      // const item = state.dropResult.find(x => x.id === Number(dataset.id))!
+      // const rect = state.dropContainerEl!.getBoundingClientRect()
+      // item.x = state.moveX - rect.x
+      // item.y = state.moveY - rect.y
+      setItemPosition(state.moveX, state.moveY, dataset.id)
     }
   }
 }
@@ -50,14 +66,17 @@ function handleMouseUp () {
         const dropOptions = dropTargetMap.get(state.dropContainerEl!)
         if (dropOptions) {
           // 将页面 position 转换为相对画布的 position
-          const rect = state.dropContainerEl!.getBoundingClientRect()
+          // const rect = state.dropContainerEl!.getBoundingClientRect()
           const dataset = state.draggingEl!.dataset
           if (!dataset.id) {
+            const { x, y } = setItemPosition(state.moveX, state.moveY)
             const data = {
               id: Date.now(),
               source: dataset.source!,
-              x: state.moveX - rect.x,
-              y: state.moveY - rect.y,
+              x,
+              y,
+              // x: state.moveX - rect.x,
+              // y: state.moveY - rect.y,
               zIndex: 1,
               width: Number(dataset.width!),
               height: Number(dataset.height!)
@@ -78,14 +97,6 @@ function handleMouseUp () {
     state.draggingEl = undefined
   }
 }
-
-document.documentElement.addEventListener('mousemove', e => {
-  handleMouseMove(e)
-})
-
-document.documentElement.addEventListener('mouseup', e => {
-  handleMouseUp()
-})
 
 function getDraggingOptions (): { key: Node, options?: DragOptions } {
   const key = state.draggingEl!.parentNode!
@@ -129,11 +140,18 @@ function setCurrent (item: DropData) {
 }
 
 export function useDrag () {
+  addEvent({
+    id: 'use-drag',
+    mousemove: handleMouseMove,
+    mouseup: handleMouseUp
+  })
+
   return {
     ...toRefs(state),
     initDrag,
     initDrop,
     setCurrent,
+    setItemPosition,
     handleMouseDown
   }
 }
