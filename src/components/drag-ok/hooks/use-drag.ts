@@ -1,6 +1,6 @@
 import { reactive, toRefs } from 'vue'
 import { State, DropOptions, DragOptions, DropData } from '../types'
-import { addEvent } from './doc-event'
+import { addEvent, emitEventMousedown } from './doc-event'
 
 const dragWrapperMap = new WeakMap<Node, DragOptions>()
 const dropTargetMap = new WeakMap<Node, DropOptions>()
@@ -40,6 +40,7 @@ function handleMouseDown (e: MouseEvent, itemEl: HTMLDivElement) {
   const draggingElRect = itemEl.getBoundingClientRect()
   state.startOffsetX = state.startX - draggingElRect.x
   state.startOffsetY = state.startY - draggingElRect.y
+  emitEventMousedown(e)
 }
 
 function handleMouseMove (e: MouseEvent) {
@@ -151,7 +152,7 @@ export function useDrag () {
     initDrag,
     initDrop,
     setCurrent,
-    setItemPosition,
+    // setItemPosition,
     handleMouseDown
   }
 }

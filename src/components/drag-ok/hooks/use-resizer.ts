@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 import { addEvent } from './doc-event'
 import { useDrag } from './use-drag'
+import MouseDownEvent = JQuery.MouseDownEvent;
 
 type Direction = 'lt' | 'rt' | 'lb' | 'rb'
 
@@ -25,12 +26,12 @@ export function useResizer () {
   }
 }
 
-let previousWidth
-let previousHeight
-let previousX
-let previousY
+let previousWidth: number
+let previousHeight: number
+let previousX: number
+let previousY: number
 let direction: Direction
-function handleMouseDown (e, dir: Direction) {
+function handleMouseDown (e: MouseDownEvent, dir: Direction) {
   state.startX = e.pageX
   state.startY = e.pageY
   const itemEl = e.target
@@ -38,6 +39,8 @@ function handleMouseDown (e, dir: Direction) {
   state.offsetX = state.startX - rect.x
   state.offsetY = state.startY - rect.y
   state.resizing = true
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const { width, height, x, y } = current.value
   previousWidth = width
   previousHeight = height
@@ -46,14 +49,14 @@ function handleMouseDown (e, dir: Direction) {
   direction = dir
 }
 
-function handleMouseMove (e) {
-  if (state.resizing) {
+function handleMouseMove (e: MouseEvent) {
+  if (state.resizing && current && current.value) {
     const moveX = e.pageX - state.offsetX
     const moveY = e.pageY - state.offsetY
     const offsetX = moveX - state.startX
     const offsetY = moveY - state.startY
-    let width
-    let height
+    let width = 0
+    let height = 0
     if (direction === 'lt') {
       width = previousWidth - offsetX
       height = previousHeight - offsetY
@@ -76,6 +79,6 @@ function handleMouseMove (e) {
   }
 }
 
-function handleMouseUp (e) {
+function handleMouseUp () {
   state.resizing = false
 }

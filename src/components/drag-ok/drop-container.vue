@@ -3,6 +3,7 @@ import { useDrag } from './hooks/use-drag'
 import { ref, onMounted } from 'vue'
 import { DropData } from './types'
 import DropItem from './drop-item.vue'
+import ReferenceLine from './components/reference-line.vue'
 
 const el = ref()
 const emit = defineEmits<{ (event: 'drop', data: DropData): void }>()
@@ -34,6 +35,10 @@ onMounted(() => {
       :style="{ left: moveX + 'px', top: moveY + 'px' }"
       v-html="draggingEl.innerHTML"
     />
+
+    <reference-line
+      v-if="dragging && draggingEl"
+    />
   </div>
 </template>
 
@@ -43,6 +48,7 @@ onMounted(() => {
   width: 1000px;
   height: 500px;
   background: #ddd;
+  user-select: none;
 }
 .c-dragging {
   position: fixed;

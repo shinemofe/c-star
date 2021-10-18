@@ -1,5 +1,6 @@
 type DocEvent = {
   id: string,
+  mousedown?: (e: MouseEvent) => void,
   mousemove: (e: MouseEvent) => void,
   mouseup: (e: MouseEvent) => void,
 }
@@ -22,6 +23,13 @@ export function removeEvent (id: string) {
   if (index > -1) {
     events.splice(index, 1)
   }
+}
+
+export function emitEventMousedown (e: MouseEvent) {
+  // id ? events.filter(x => x.id === id)
+  events.forEach(item => {
+    item.mousedown && item.mousedown(e)
+  })
 }
 
 export function bindDoc () {
