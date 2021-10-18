@@ -27,6 +27,7 @@ export type State = {
   moveX: number,
   moveY: number,
   dragging: boolean,
+  dragMoving: boolean,
   draggingEl?: HTMLDivElement,
   dropContainerEl?: HTMLDivElement,
   dropResult: Array<DropData>,

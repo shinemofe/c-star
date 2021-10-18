@@ -12,6 +12,7 @@ const state = reactive<State>({
   moveX: 0,
   moveY: 0,
   dragging: false,
+  dragMoving: false,
   draggingEl: undefined,
   dropContainerEl: undefined,
   dropResult: [],
@@ -38,6 +39,11 @@ function handleMouseDown (e: MouseEvent, itemEl: HTMLDivElement) {
   state.dragging = true
   state.draggingEl = itemEl
   const draggingElRect = itemEl.getBoundingClientRect()
+  const dataset = state.draggingEl!.dataset
+  if (dataset.id) {
+    const item = state.dropResult.find(x => x.id === Number(dataset.id))
+    item && setCurrent(item)
+  }
   state.startOffsetX = state.startX - draggingElRect.x
   state.startOffsetY = state.startY - draggingElRect.y
   emitEventMousedown(e)
@@ -55,6 +61,7 @@ function handleMouseMove (e: MouseEvent) {
       // item.y = state.moveY - rect.y
       setItemPosition(state.moveX, state.moveY, dataset.id)
     }
+    state.dragMoving = true
   }
 }
 
@@ -95,6 +102,7 @@ function handleMouseUp () {
     }
 
     state.dragging = false
+    state.dragMoving = false
     state.draggingEl = undefined
   }
 }

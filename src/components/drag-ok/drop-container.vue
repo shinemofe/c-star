@@ -7,7 +7,7 @@ import ReferenceLine from './components/reference-line.vue'
 
 const el = ref()
 const emit = defineEmits<{ (event: 'drop', data: DropData): void }>()
-const { moveX, moveY, draggingEl, dragging, initDrop, dropResult } = useDrag()
+const { moveX, moveY, draggingEl, dragging, dragMoving, initDrop, dropResult } = useDrag()
 
 onMounted(() => {
   initDrop({
@@ -37,7 +37,7 @@ onMounted(() => {
     />
 
     <reference-line
-      v-if="dragging && draggingEl"
+      v-if="dragMoving && draggingEl"
     />
   </div>
 </template>
