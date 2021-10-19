@@ -148,6 +148,12 @@ function setCurrent (item: DropData) {
   state.current = item
 }
 
+function setDragState (obj: { moveX?: number, moveY?: number }) {
+  Object.keys(obj).forEach(k => {
+    state[k] = obj[k]
+  })
+}
+
 export function useDrag () {
   addEvent({
     id: 'use-drag',
@@ -160,7 +166,8 @@ export function useDrag () {
     initDrag,
     initDrop,
     setCurrent,
-    // setItemPosition,
+    setItemPosition,
+    setDragState,
     handleMouseDown
   }
 }

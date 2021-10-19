@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDrag } from './hooks/use-drag'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { DropData } from './types'
 import DropItem from './drop-item.vue'
 import ReferenceLine from './components/reference-line.vue'
@@ -19,6 +19,7 @@ const props = defineProps({
     default: 600
   }
 })
+const draggingElDataset = computed(() => draggingEl.value ? draggingEl.value.dataset : {})
 
 onMounted(() => {
   initDrop({
@@ -51,7 +52,12 @@ onMounted(() => {
       <div
         v-if="dragging && draggingEl && !draggingEl.dataset.id"
         class="c-dragging"
-        :style="{ left: moveX + 'px', top: moveY + 'px' }"
+        :style="{
+        left: moveX + 'px',
+        top: moveY + 'px',
+        width: draggingElDataset.width + 'px',
+        height: draggingElDataset.height + 'px'
+        }"
         v-html="draggingEl.innerHTML"
       />
 
@@ -84,5 +90,10 @@ onMounted(() => {
   left: -1000px;
   top: -1000px;
   z-index: 9999;
+  background: #ccc;
+  & > div {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
