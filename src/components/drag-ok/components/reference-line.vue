@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useReferenceLine } from '../hooks/use-reference-line'
 
-const { lineHorizontal, lineVertical } = useReferenceLine()
+const { lineHorizontal, lineVertical, distanceHorizontal, distanceVertical } = useReferenceLine()
 </script>
 
 <template>
@@ -11,7 +11,8 @@ const { lineHorizontal, lineVertical } = useReferenceLine()
     class="c-drop-reference-line horizontal"
     :style="{ top: top + 'px' }"
   >
-    <span>{{ top }}px</span>
+    <span class="px">{{ top }}px</span>
+    <span v-if="distanceHorizontal[i]" class="distance">{{ distanceHorizontal[i] }}px</span>
   </div>
   <div
     v-for="(left, i) in lineVertical"
@@ -19,7 +20,8 @@ const { lineHorizontal, lineVertical } = useReferenceLine()
     class="c-drop-reference-line vertical"
     :style="{ left: left + 'px' }"
   >
-    <span>{{ left }}px</span>
+    <span class="px">{{ left }}px</span>
+    <span v-if="distanceVertical[i]" class="distance">{{ distanceVertical[i] }}px</span>
   </div>
 </template>
 
@@ -33,17 +35,27 @@ const { lineHorizontal, lineVertical } = useReferenceLine()
     left: 0;
     right: 0;
     height: 1px;
-    span {
+    .distance {
       top: -7px;
-      left: 10px;
+      right: -22px;
+      transform: rotate(-90deg);
+      line-height: 1;
+    }
+    .px {
+      top: -7px;
+      left: 5px;
     }
   }
   &.vertical {
     top: 0;
     bottom: 0;
     width: 1px;
-    span {
-      top: 10px;
+    .distance {
+      bottom: -15px;
+      left: -10px;
+    }
+    .px {
+      top: 5px;
       left: -10px;
     }
   }
@@ -51,7 +63,11 @@ const { lineHorizontal, lineVertical } = useReferenceLine()
     position: absolute;
     font-size: 10px;
     color: @reference-line-color;
-    background: @canvas-bg-color;
+    width: 30px;
+    text-align: center;
+    &.px {
+      background: @canvas-bg-color;
+    }
   }
 }
 </style>

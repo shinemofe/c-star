@@ -53,10 +53,10 @@ onMounted(() => {
         v-if="dragging && draggingEl && !draggingEl.dataset.id"
         class="c-dragging"
         :style="{
-        left: moveX + 'px',
-        top: moveY + 'px',
-        width: draggingElDataset.width + 'px',
-        height: draggingElDataset.height + 'px'
+          left: moveX + 'px',
+          top: moveY + 'px',
+          width: draggingElDataset.width + 'px',
+          height: draggingElDataset.height + 'px'
         }"
         v-html="draggingEl.innerHTML"
       />

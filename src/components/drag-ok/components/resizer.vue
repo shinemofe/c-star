@@ -42,8 +42,8 @@ const { handleMouseDown: resizerMouseDown } = useResizer()
     position: absolute;
     left: 0px;
     top: 0px;
-    right: 0px;
-    bottom: 0px;
+    right: -1px;
+    bottom: -1px;
     pointer-events: none;
     border: 1px dashed @resizer-focus-color;
   }
