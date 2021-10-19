@@ -36,6 +36,7 @@ const { handleMouseDown: resizerMouseDown } = useResizer()
 </template>
 
 <style lang="less">
+@import '../var';
 .c-drop-item {
   &__controls {
     position: absolute;
@@ -44,14 +45,14 @@ const { handleMouseDown: resizerMouseDown } = useResizer()
     right: 0px;
     bottom: 0px;
     pointer-events: none;
-    border: 1px dashed #ccc;
+    border: 1px dashed @resizer-focus-color;
   }
   &__controls-resizer {
     position: absolute;
     background: white;
     width: 6px;
     height: 6px;
-    border: 1px solid #3b8ff6;
+    border: 1px solid @resizer-border-color;
     pointer-events: all;
     &.n.w {
       cursor: nw-resize;
