@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Index from '@/views/Index.vue'
 import About from '@/views/About.vue'
 import ProjectSelect from '@/views/project/Index.vue'
-import DragDemo from './views/drag-demo.vue'
+import DragDemo from './views/editor-component/index.vue'
 
 const routes = [
   {
