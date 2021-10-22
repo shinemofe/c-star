@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDrag } from './hooks/use-drag'
-import { ref } from 'vue'
+import { getCurrentInstance } from 'vue'
 
 const props = defineProps({
   source: {
@@ -16,18 +16,17 @@ const props = defineProps({
     default: 100
   }
 })
-const el = ref()
 const { handleMouseDown } = useDrag()
+const instance = getCurrentInstance()
 </script>
 
 <template>
   <div
-    ref="el"
     class="c-drag-item"
     :data-source="props.source"
     :data-width="props.width"
     :data-height="props.height"
-    @mousedown="e => handleMouseDown(e, el)"
+    @mousedown="e => handleMouseDown(e, instance)"
   >
     <slot />
   </div>

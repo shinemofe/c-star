@@ -1,6 +1,7 @@
 import { reactive, toRefs } from 'vue'
 import { State, DropOptions, DragOptions, DropData } from '../types'
 import { addEvent, emitEventMousedown } from './doc-event'
+import { ComponentInternalInstance } from '@vue/runtime-core'
 
 const dragWrapperMap = new WeakMap<Node, DragOptions>()
 const dropTargetMap = new WeakMap<Node, DropOptions>()
@@ -19,26 +20,14 @@ const state = reactive<State>({
   current: undefined
 })
 
-function setItemPosition (x: number, y: number, itemId?: string): { x: number, y: number } {
-  let item
-  const rect = state.dropContainerEl!.getBoundingClientRect()
-  if (itemId) {
-    item = state.dropResult.find(x => x.id === Number(itemId))!
-    item.x = x - rect.x
-    item.y = y - rect.y
-  }
-  return {
-    x: x - rect.x,
-    y: y - rect.y
-  }
-}
-
-function handleMouseDown (e: MouseEvent, itemEl: HTMLDivElement) {
+let dragComponentInstance
+function handleMouseDown (e: MouseEvent, itemInstance: ComponentInternalInstance) {
   state.startX = e.pageX
   state.startY = e.pageY
   state.dragging = true
-  state.draggingEl = itemEl
-  const draggingElRect = itemEl.getBoundingClientRect()
+  state.draggingEl = itemInstance.vnode.el
+  dragComponentInstance = itemInstance
+  const draggingElRect = itemInstance.vnode.el.getBoundingClientRect()
   const dataset = state.draggingEl!.dataset
   if (dataset.id) {
     const item = state.dropResult.find(x => x.id === Number(dataset.id))
@@ -67,7 +56,7 @@ function handleMouseMove (e: MouseEvent) {
 
 function handleMouseUp () {
   if (state.dragging) {
-    const { options } = getDraggingOptions()
+    const { options } = getDraggingOptions(dragComponentInstance?.parent.vnode.el)
     if (options && options.targetEl) {
       // 判断当前左上点是否在 target 盒子内
       if (isPointInElBox({ x: state.moveX, y: state.moveY }, options.targetEl)) {
@@ -104,15 +93,30 @@ function handleMouseUp () {
     state.dragging = false
     state.dragMoving = false
     state.draggingEl = undefined
+    dragComponentInstance = undefined
   }
 }
 
-function getDraggingOptions (): { key: Node, options?: DragOptions } {
-  const key = state.draggingEl!.parentNode!
+function getDraggingOptions (key): { key: Node, options?: DragOptions } {
+  // const key = state.draggingEl!.parentNode!
   const options = dragWrapperMap.get(key)
   return {
     key,
     options
+  }
+}
+
+function setItemPosition (x: number, y: number, itemId?: string): { x: number, y: number } {
+  let item
+  const rect = state.dropContainerEl!.getBoundingClientRect()
+  if (itemId) {
+    item = state.dropResult.find(x => x.id === Number(itemId))!
+    item.x = x - rect.x
+    item.y = y - rect.y
+  }
+  return {
+    x: x - rect.x,
+    y: y - rect.y
   }
 }
 

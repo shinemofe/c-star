@@ -26,6 +26,9 @@ if (parentState.children.every((x: ComponentInternalInstance) => x !== ctx)) {
 @import '../var';
 .c-sidebar {
   &__content-item {
+    height: 100%;
+    background: @gray2;
+    border-right: 1px solid @gray1-border-color;
   }
 }
 </style>

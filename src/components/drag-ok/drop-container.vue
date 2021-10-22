@@ -58,7 +58,6 @@ onMounted(() => {
           width: draggingElDataset.width + 'px',
           height: draggingElDataset.height + 'px'
         }"
-        v-html="draggingEl.innerHTML"
       />
 
       <reference-line

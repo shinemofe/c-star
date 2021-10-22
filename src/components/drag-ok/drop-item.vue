@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useDrag } from './hooks/use-drag'
-import { ref, computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { DropData } from './types'
 import Resizer from './components/resizer.vue'
 
 const props = defineProps<{ data: DropData }>()
-const el = ref()
 const { handleMouseDown, setCurrent, current } = useDrag()
 const isCurrent = computed(() => current && current.value && current.value.id === props.data.id)
+const instance = getCurrentInstance()
 
 function handleClick () {
   setCurrent(props.data)
@@ -16,7 +16,6 @@ function handleClick () {
 
 <template>
   <div
-    ref="el"
     class="c-drop-item"
     :class="{
       'c-drop-item__active': isCurrent
@@ -33,7 +32,7 @@ function handleClick () {
   >
     <div
       class="c-drop-item__content"
-      @mousedown="e => handleMouseDown(e, el)"
+      @mousedown="e => handleMouseDown(e, instance)"
     >
       <slot />
     </div>
